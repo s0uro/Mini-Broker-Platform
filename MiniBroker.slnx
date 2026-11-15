@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MiniBroker.Api/MiniBroker.Api.csproj" />
+    <Project Path="src/MiniBroker.Domain/MiniBroker.Domain.csproj" />
+    <Project Path="src/MiniBroker.Infrastructure/MiniBroker.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MiniBroker.Tests/MiniBroker.Tests.csproj" />
+  </Folder>
+</Solution>

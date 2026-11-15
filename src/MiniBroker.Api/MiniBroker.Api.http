@@ -1,0 +1,61 @@
+@host = http://localhost:5283
+# 1) Run "register" or "login", 2) paste the token below, 3) open an account and paste its id.
+@token = paste-token-here
+@accountId = 00000000-0000-0000-0000-000000000000
+
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{ "email": "you@example.com", "password": "a-long-password", "displayName": "You" }
+
+###
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "you@example.com", "password": "a-long-password" }
+
+###
+POST {{host}}/api/accounts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Main" }
+
+###
+POST {{host}}/api/accounts/{{accountId}}/deposits
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "amount": 10000 }
+
+###
+# Market order
+POST {{host}}/api/accounts/{{accountId}}/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "symbol": "AAPL", "side": "Buy", "quantity": 5 }
+
+###
+# Limit order (waits until the price is at or below 180)
+POST {{host}}/api/accounts/{{accountId}}/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "symbol": "AAPL", "side": "Buy", "type": "Limit", "quantity": 2, "limitPrice": 180 }
+
+###
+GET {{host}}/api/accounts/{{accountId}}/orders?status=Pending
+Authorization: Bearer {{token}}
+
+###
+GET {{host}}/api/accounts/{{accountId}}/transactions
+Authorization: Bearer {{token}}
+
+###
+GET {{host}}/api/instruments/AAPL/history?range=1h
+Authorization: Bearer {{token}}
+
+###
+PUT {{host}}/api/watchlist/NVDA
+Authorization: Bearer {{token}}
