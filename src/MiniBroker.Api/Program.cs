@@ -87,6 +87,20 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+
+// Basic hardening headers for both the API and the bundled frontend.
+app.Use((http, next) =>
+{
+    var headers = http.Response.Headers;
+    headers.XContentTypeOptions = "nosniff";
+    headers.XFrameOptions = "DENY";
+    headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    return next(http);
+});
+
+// In production the React build is copied into wwwroot by CI and served from the same origin (no CORS needed).
+app.UseDefaultFiles();
+app.UseStaticFiles();
 if (allowedOrigins.Length > 0)
     app.UseCors();
 app.UseAuthentication();
@@ -110,6 +124,10 @@ app.MapAccountEndpoints();
 app.MapOrderEndpoints();
 app.MapInstrumentEndpoints();
 app.MapWatchlistEndpoints();
+
+// Unknown API routes stay 404; every other path is a client-side route of the SPA.
+app.MapFallback("/api/{**rest}", () => Results.NotFound());
+app.MapFallbackToFile("index.html");
 
 app.Run();
 
